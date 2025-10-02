@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VI — Checkpoint 3</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <!-- D3 v7 -->
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+</head>
+<body>
+  <header class="topbar">
+    <h1>VideoGame Sales Explorer</h1>
+  </header>
+
+  <div class="layout">
+    <aside class="filters" id="filterPanel">
+      <h2>Filters</h2>
+      <div id="activePills"></div>
+      <div class="filter-group" id="genrePicker"></div>
+      <div class="filter-group" id="publisherPicker"></div>
+      <!--<div class="filter-group" id="regionPicker"></div>-->
+      <div class="filter-group" id="platformPicker"></div>
+      <div class="filter-group" id="decadePicker"></div>
+      <div class="filter-group" id="rankRange"></div>
+      <div class="filter-group" id="scoreRange"></div>
+      <div class="filter-group" id="searchBox"></div>
+      <div class="filter-actions">
+        <button id="clearFilters">Clear</button>
+        <button id="applyFilters" class="primary">Apply</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="card">
+         <div class="chart-controls">
+            <label class="switch">
+            <input id="stackedModeToggle" type="checkbox" />
+            <span class="slider"></span>
+            <span class="label">Mode: <b id="stackedModeLabel">Publisher</b></span>
+            </label>
+
+            <label class="switch">
+            <input id="stackedNormalizeToggle" type="checkbox" />
+            <span class="slider"></span>
+            <span class="label">Normalize 100%</span>
+            </label>
+        </div>
+        <h3>Stacked Bar</h3>
+        <div id="stackedRoot" class="chart-root"></div>
+        <div id="legendRoot" class="legend-root"></div>
+      </section>
+
+      <section class="grid grid-2">
+        <div class="card placeholder">
+          <h3>Scatter (Q2/Q6)</h3>
+          <p>Placeholder</p>
+        </div>
+        <div class="card placeholder">
+          <h3>Density (Q3)</h3>
+          <p>Placeholder</p>
+        </div>
+      </section>
+
+      <section class="grid grid-2">
+        <div class="card placeholder">
+          <h3>Alluvial (Q4/Q5)</h3>
+          <p>Placeholder</p>
+        </div>
+        <div class="card placeholder">
+          <h3>Multi-Series Line (Q6)</h3>
+          <p>Placeholder</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <footer class="footer">
+    <span>Dataset esperado: <code>assets/vgsales_with_ratings_decades.csv</code></span>
+  </footer>
+
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
