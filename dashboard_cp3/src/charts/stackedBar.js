@@ -59,7 +59,6 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('y', innerH)
                 .attr('height', 0)
                 .attr('width', x.bandwidth())
-                //.on('mouseleave', () => hoverSegment(null))
                 .on('mousemove', (evt, d) => {
                     const key   = seriesData.key;         
                     const genre = d.data.Genre;
@@ -78,6 +77,7 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
 
                     bus.emit('STACKED/SELECT/segment', { key, genre });
                 })
+                .on('mouseleave', () => {hoverSegment(null); hideTip()})
                 .merge(rects)
                 .transition().duration(250)
                 .attr('x', d => x(d.data.Genre))
@@ -112,13 +112,15 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
     }
 
     function hoverSegment(key, genre, val, total, el) {
+        const root = d3.select(rootEl);     
+
         if (!key) {
-            d3.selectAll('.segment').classed('dimmed', false);
+            root.selectAll('.segment').classed('hover-dim', false);
             return;
         }
-        root.selectAll('.segment').classed('dimmed', function () {
-            const groupKey = this.parentNode.__data__ && this.parentNode.__data__.key;
-            return groupKey !== key;
+        root.selectAll('.segment').classed('hover-dim', function () {
+            const k = this.parentNode.__data__ && this.parentNode.__data__.key;
+            return k !== key;
         });
        
     }
