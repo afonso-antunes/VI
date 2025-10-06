@@ -16,7 +16,7 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
-    const x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.05).range([0, innerW]);
+    const x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.02).range([0, innerW]);
     const y = d3.scaleLinear().range([innerH, 0]);
 
     const xAxisG = g.append('g').attr('class', 'axis x').attr('transform', `translate(0,${innerH})`);
@@ -59,12 +59,8 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('y', innerH)
                 .attr('height', 0)
                 .attr('width', x.bandwidth())
-                .on('mousemove', function(evt, d) {
-                const key = seriesData.key;
-                hoverSegment(key, d.data.Genre, d[1]-d[0], d.data.__total, this);
-                })
-                .on('mouseleave', () => hoverSegment(null))
-                .on('click', (evt, d) => {
+                //.on('mouseleave', () => hoverSegment(null))
+                .on('mousemove', (evt, d) => {
                     const key   = seriesData.key;         
                     const genre = d.data.Genre;
                     const val   = d[1] - d[0];            
@@ -120,10 +116,11 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
             d3.selectAll('.segment').classed('dimmed', false);
             return;
         }
-        d3.selectAll('.segment').classed('dimmed', true);
-        d3.select(el).classed('dimmed', false);
-        const pct = state.normalize ? d3.format('.0%')(val) : d3.format('.2f')(val);
-        d3.select(el).attr('title', `${genre} — ${key}: ${pct}${state.normalize?'':' M'}`);
+        root.selectAll('.segment').classed('dimmed', function () {
+            const groupKey = this.parentNode.__data__ && this.parentNode.__data__.key;
+            return groupKey !== key;
+        });
+       
     }
 
     function showTip(html, [x0,y0]) {

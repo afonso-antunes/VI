@@ -1,7 +1,7 @@
 export function makePublisherColor(series) {
   const palette = [
-    '#60a5fa','#22d3ee','#a78bfa','#34d399','#f472b6','#f59e0b','#ef4444','#10b981',
-    '#93c5fd','#06b6d4','#c4b5fd','#6ee7b7','#fda4af','#fbbf24','#f97316','#84cc16'
+    '#60a5fa','#22d3ee','#a78bfa', '#f472b6','#f59e0b','#ef4444','#d946ef',
+    '#93c5fd','#06b6d4','#c4b5fd','#fda4af','#fbbf24','#f97316','#84cc16'
   ];
   const map = new Map();
   let i = 0;

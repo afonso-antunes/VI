@@ -23,7 +23,7 @@ export function aggregateForStacked(rows, mode, normalize) {
     }
   }
 
-  const N = mode === 'publisher' ? 8 : 4;
+  const N = mode === 'publisher' ? 1 : 4;
   const seriesSet = new Set();
   const data = [];
 

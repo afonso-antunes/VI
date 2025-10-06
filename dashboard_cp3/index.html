@@ -31,49 +31,57 @@
       </div>
     </aside>
 
-    <main class="main">
-      <section class="card">
-         <div class="chart-controls">
-            <label class="switch">
+  <main class="main">
+    <!-- ROW 1: Stacked (esq) + outro plot (dir) -->
+    <section class="grid grid-2">
+      <div class="card">
+        <div class="chart-controls">
+          <label class="switch">
             <input id="stackedModeToggle" type="checkbox" />
             <span class="slider"></span>
             <span class="label">Mode: <b id="stackedModeLabel">Publisher</b></span>
-            </label>
-
-            <label class="switch">
+          </label>
+          <label class="switch">
             <input id="stackedNormalizeToggle" type="checkbox" />
             <span class="slider"></span>
             <span class="label">Normalize 100%</span>
-            </label>
+          </label>
         </div>
-        <h3>Stacked Bar</h3>
         <div id="stackedRoot" class="chart-root"></div>
         <div id="legendRoot" class="legend-root"></div>
-      </section>
+      </div>
 
-      <section class="grid grid-2">
-        <div class="card placeholder">
-          <h3>Scatter (Q2/Q6)</h3>
-          <p>Placeholder</p>
-        </div>
-        <div class="card placeholder">
-          <h3>Density (Q3)</h3>
-          <p>Placeholder</p>
-        </div>
-      </section>
+      <div class="card placeholder">
+        <h3>Secondary Plot</h3>
+        <p>Placeholder (e.g., small line chart or KPI panel)</p>
+      </div>
+    </section>
 
-      <section class="grid grid-2">
-        <div class="card placeholder">
-          <h3>Alluvial (Q4/Q5)</h3>
-          <p>Placeholder</p>
-        </div>
-        <div class="card placeholder">
-          <h3>Multi-Series Line (Q6)</h3>
-          <p>Placeholder</p>
-        </div>
-      </section>
-    </main>
-  </div>
+    <!-- ROW 2 -->
+    <section class="grid grid-2">
+      <div class="card placeholder">
+        <h3>Scatter (Q2/Q6)</h3>
+        <p>Placeholder</p>
+      </div>
+      <div class="card placeholder">
+        <h3>Density (Q3)</h3>
+        <p>Placeholder</p>
+      </div>
+    </section>
+
+    <!-- ROW 3 -->
+    <section class="grid grid-2">
+      <div class="card placeholder">
+        <h3>Alluvial (Q4/Q5)</h3>
+        <p>Placeholder</p>
+      </div>
+      <div class="card placeholder">
+        <h3>Multi-Series Line (Q6)</h3>
+        <p>Placeholder</p>
+      </div>
+    </section>
+  </main>
+
 
   <footer class="footer">
     <span>Dataset esperado: <code>assets/vgsales_with_ratings_decades.csv</code></span>

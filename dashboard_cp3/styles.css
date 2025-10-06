@@ -110,3 +110,12 @@ svg text { fill: #c7d0dc; font-size: 11px; }
   z-index: 20;
 }
 .tooltip .muted { color: var(--muted); }
+.grid {
+  display: grid;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.grid-2 {grid-template-columns: 1fr 1fr;}
+.card .chart-root {
+  min-height: 420px;
+}
