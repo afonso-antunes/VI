@@ -119,3 +119,8 @@ svg text { fill: #c7d0dc; font-size: 11px; }
 .card .chart-root {
   min-height: 420px;
 }
+.bar:hover { filter: none; }
+.segment { transition: opacity .15s ease; }
+.segment:hover { filter: brightness(1.05); }
+.segment.hover-dim { opacity: .45; }
+.segment.dimmed    { opacity: .25; } 

@@ -3,7 +3,8 @@ import { createState } from './src/core/state.js';
 import { createBus } from './src/core/eventBus.js';
 import { mountStackedBar } from './src/charts/stackedBar.js';
 import { mountFilterPanel } from './src/filters/filterPanel.js';
-import { wireIntegration } from './src/core/integration.js';
+//import { mountDensitySales } from './src/charts/density.js';
+//import { mountScatter } from './src/charts/scatter.js';
 
 const bus = createBus();
 
@@ -34,15 +35,7 @@ const bus = createBus();
     });
 
     mountFilterPanel(document.getElementById('filterPanel'), state, bus);
-    mountStackedBar(
-    document.getElementById('stackedRoot'),
-    document.getElementById('legendRoot'),
-    state,
-    bus
-    );
-
-    // para futuro
-    wireIntegration(state, bus);
+    mountStackedBar(document.getElementById('stackedRoot'),document.getElementById('legendRoot'),state,bus);
 
     bus.on('STATE/CHANGE', syncToggles);
 })();

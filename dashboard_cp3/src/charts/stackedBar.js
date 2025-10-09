@@ -59,25 +59,32 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('y', innerH)
                 .attr('height', 0)
                 .attr('width', x.bandwidth())
-                .on('mousemove', (evt, d) => {
-                    const key   = seriesData.key;         
+                .on('mouseenter', (evt, d) => {
+                    const key = seriesData.key;
+                    hoverSegment(key);
                     const genre = d.data.Genre;
-                    const val   = d[1] - d[0];            
-                    const abs   = state.normalize ? (val * d.data.__totalAbs) : val; 
+                    const val   = d[1] - d[0];
+                    const abs   = state.normalize ? (val * d.data.__totalAbs) : val;
                     const pct   = state.normalize ? ` <span class="muted">(${d3.format('.0%')(val)})</span>` : '';
                     const label = state.mode === 'region' ? 'Region' : 'Publisher';
-
                     const [mx,my] = d3.pointer(evt, rootEl);
                     const html = `
-                        <div><b>${label}:</b> ${key}</div>
-                        <div><b>Genre:</b> ${genre}</div>
-                        <div><b>Number of Sales:</b> ${d3.format('.2f')(abs)} M${pct}</div>
+                    <div><b>${label}:</b> ${key}</div>
+                    <div><b>Genre:</b> ${genre}</div>
+                    <div><b>Number of Sales:</b> ${d3.format('.2f')(abs)} M${pct}</div>
                     `;
                     showTip(html, [mx,my]);
-
-                    bus.emit('STACKED/SELECT/segment', { key, genre });
                 })
-                .on('mouseleave', () => {hoverSegment(null); hideTip()})
+                .on('mousemove', (evt) => {
+                    const [mx,my] = d3.pointer(evt, rootEl);
+                    tip.style('left', (mx + 12) + 'px').style('top', (my + 12) + 'px');
+                })
+                .on('mouseleave', () => { hoverSegment(null); hideTip(); })
+
+                .on('click', () => {
+                    bus.emit('STACKED/SELECT/segment', { key: seriesData.key, genre: null });
+                })
+
                 .merge(rects)
                 .transition().duration(250)
                 .attr('x', d => x(d.data.Genre))
@@ -85,7 +92,6 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('height', d => Math.max(0, y(d[0]) - y(d[1])))
                 .attr('width', x.bandwidth());
 
-                rects.exit().remove();
             });
 
         genreG.exit().remove();

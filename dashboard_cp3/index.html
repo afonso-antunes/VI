@@ -32,7 +32,6 @@
     </aside>
 
   <main class="main">
-    <!-- ROW 1: Stacked (esq) + outro plot (dir) -->
     <section class="grid grid-2">
       <div class="card">
         <div class="chart-controls">
@@ -51,20 +50,20 @@
         <div id="legendRoot" class="legend-root"></div>
       </div>
 
-      <div class="card placeholder">
-        <h3>Secondary Plot</h3>
-        <p>Placeholder (e.g., small line chart or KPI panel)</p>
+      <div class="card">
+        <div id="densitySalesRoot" class="chart-root"></div>
+        <div id="densityLegend" class="legend-root"></div>
       </div>
     </section>
 
     <!-- ROW 2 -->
     <section class="grid grid-2">
-      <div class="card placeholder">
-        <h3>Scatter (Q2/Q6)</h3>
-        <p>Placeholder</p>
+      <div class="card">
+        <div id="scatterRoot" class="chart-root"></div>
+        <div id="scatterLegend" class="legend-root"></div>
       </div>
       <div class="card placeholder">
-        <h3>Density (Q3)</h3>
+        <h3>Alluvial(Q4/Q5)</h3>
         <p>Placeholder</p>
       </div>
     </section>
@@ -72,20 +71,11 @@
     <!-- ROW 3 -->
     <section class="grid grid-2">
       <div class="card placeholder">
-        <h3>Alluvial (Q4/Q5)</h3>
-        <p>Placeholder</p>
-      </div>
-      <div class="card placeholder">
         <h3>Multi-Series Line (Q6)</h3>
         <p>Placeholder</p>
       </div>
     </section>
   </main>
-
-
-  <footer class="footer">
-    <span>Dataset esperado: <code>assets/vgsales_with_ratings_decades.csv</code></span>
-  </footer>
 
   <script type="module" src="./main.js"></script>
 </body>
