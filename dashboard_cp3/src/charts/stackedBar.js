@@ -16,7 +16,7 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
     const innerW = width - margin.left - margin.right;
     const innerH = height - margin.top - margin.bottom;
 
-    const x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.05).range([0, innerW]);
+    const x = d3.scaleBand().paddingInner(0.2).paddingOuter(0.02).range([0, innerW]);
     const y = d3.scaleLinear().range([innerH, 0]);
 
     const xAxisG = g.append('g').attr('class', 'axis x').attr('transform', `translate(0,${innerH})`);
@@ -59,29 +59,32 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('y', innerH)
                 .attr('height', 0)
                 .attr('width', x.bandwidth())
-                .on('mousemove', function(evt, d) {
-                const key = seriesData.key;
-                hoverSegment(key, d.data.Genre, d[1]-d[0], d.data.__total, this);
-                })
-                .on('mouseleave', () => hoverSegment(null))
-                .on('click', (evt, d) => {
-                    const key   = seriesData.key;         
+                .on('mouseenter', (evt, d) => {
+                    const key = seriesData.key;
+                    hoverSegment(key); // aplica .hover-dim nos outros
                     const genre = d.data.Genre;
-                    const val   = d[1] - d[0];            
-                    const abs   = state.normalize ? (val * d.data.__totalAbs) : val; 
+                    const val   = d[1] - d[0];
+                    const abs   = state.normalize ? (val * d.data.__totalAbs) : val;
                     const pct   = state.normalize ? ` <span class="muted">(${d3.format('.0%')(val)})</span>` : '';
                     const label = state.mode === 'region' ? 'Region' : 'Publisher';
-
                     const [mx,my] = d3.pointer(evt, rootEl);
                     const html = `
-                        <div><b>${label}:</b> ${key}</div>
-                        <div><b>Genre:</b> ${genre}</div>
-                        <div><b>Number of Sales:</b> ${d3.format('.2f')(abs)} M${pct}</div>
+                    <div><b>${label}:</b> ${key}</div>
+                    <div><b>Genre:</b> ${genre}</div>
+                    <div><b>Number of Sales:</b> ${d3.format('.2f')(abs)} M${pct}</div>
                     `;
                     showTip(html, [mx,my]);
-
-                    bus.emit('STACKED/SELECT/segment', { key, genre });
                 })
+                .on('mousemove', (evt) => {
+                    const [mx,my] = d3.pointer(evt, rootEl);
+                    tip.style('left', (mx + 12) + 'px').style('top', (my + 12) + 'px');
+                })
+                .on('mouseleave', () => { hoverSegment(null); hideTip(); })
+
+                .on('click', () => {
+                    bus.emit('STACKED/SELECT/segment', { key: seriesData.key, genre: null });
+                })
+
                 .merge(rects)
                 .transition().duration(250)
                 .attr('x', d => x(d.data.Genre))
@@ -89,7 +92,6 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('height', d => Math.max(0, y(d[0]) - y(d[1])))
                 .attr('width', x.bandwidth());
 
-                rects.exit().remove();
             });
 
         genreG.exit().remove();
@@ -116,14 +118,17 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
     }
 
     function hoverSegment(key, genre, val, total, el) {
+        const root = d3.select(rootEl);     
+
         if (!key) {
-            d3.selectAll('.segment').classed('dimmed', false);
+            root.selectAll('.segment').classed('hover-dim', false);
             return;
         }
-        d3.selectAll('.segment').classed('dimmed', true);
-        d3.select(el).classed('dimmed', false);
-        const pct = state.normalize ? d3.format('.0%')(val) : d3.format('.2f')(val);
-        d3.select(el).attr('title', `${genre} — ${key}: ${pct}${state.normalize?'':' M'}`);
+        root.selectAll('.segment').classed('hover-dim', function () {
+            const k = this.parentNode.__data__ && this.parentNode.__data__.key;
+            return k !== key;
+        });
+       
     }
 
     function showTip(html, [x0,y0]) {
