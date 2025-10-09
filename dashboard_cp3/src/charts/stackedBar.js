@@ -61,7 +61,7 @@ export function mountStackedBar(rootEl, legendEl, state, bus) {
                 .attr('width', x.bandwidth())
                 .on('mouseenter', (evt, d) => {
                     const key = seriesData.key;
-                    hoverSegment(key); // aplica .hover-dim nos outros
+                    hoverSegment(key);
                     const genre = d.data.Genre;
                     const val   = d[1] - d[0];
                     const abs   = state.normalize ? (val * d.data.__totalAbs) : val;

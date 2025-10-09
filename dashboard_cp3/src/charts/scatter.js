@@ -3,18 +3,15 @@ export function mountScatter(rootEl, legendEl, state, bus) {
   const width  = rootEl.clientWidth;
   const height = rootEl.clientHeight || 360;
 
-  // Domínios default (são definidos no 1º update a partir dos dados)
   let defaultX = [0, 1];
   let defaultY = [0, 1];
   let xDomain = defaultX.slice();
   let yDomain = defaultY.slice();
   let initializedDomains = false;
 
-  // Seleção (destacar 1 género) + filtro vindo do density (Top/Rest)
   let selectedGenre = null;
-  let densityFilter = null; // { group:'top'|'rest', n } ou null
+  let densityFilter = null; 
 
-  // SVG + grupos
   const svg = d3.select(rootEl).append('svg')
     .attr('width', width)
     .attr('height', height);
@@ -92,7 +89,7 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
       .attr('opacity', d => pass(d) ? 0.95 : 0.15);
   }
 
-  // Brush 2D (atrás dos pontos)
+  // Brush 2d
   const brush = d3.brush()
     .extent([[0, 0], [innerW, innerH]])
     .on('start', () => { brushG.select('.overlay').style('cursor','crosshair'); })
@@ -106,7 +103,7 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
       const alt   = evt.sourceEvent && evt.sourceEvent.altKey;
 
       if (!alt)    xDomain = [x.invert(x0), x.invert(x1)];
-      if (!shift)  yDomain = [y.invert(y1), y.invert(y0)]; // y invertido
+      if (!shift)  yDomain = [y.invert(y1), y.invert(y0)];
 
       const dx = Math.abs(xDomain[1] - xDomain[0]);
       const dy = Math.abs(yDomain[1] - yDomain[0]);
@@ -146,12 +143,10 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
   }
 
   function update() {
-    // dados filtrados
     const rows = state.data.view.filter(d =>
       Number.isFinite(d.NA_Sales) && Number.isFinite(d.Global_Sales)
     );
 
-    // domínios default (primeira vez ou se os máximos mudarem e ainda estamos nos defaults)
     const maxX = d3.max(rows, d => d.NA_Sales)    || 1;
     const maxY = d3.max(rows, d => d.Global_Sales) || 1;
 
@@ -168,13 +163,11 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
     xAxisG.call(d3.axisBottom(x).ticks(6));
     yAxisG.call(d3.axisLeft(y).ticks(6));
 
-    // categorias (género) e cores
     const byGenreCount = d3.rollup(rows, v => v.length, d => d.Genre || 'Unknown');
     const genresSorted = Array.from(byGenreCount.keys()).sort((a,b)=>byGenreCount.get(b)-byGenreCount.get(a));
     const categories   = genresSorted.slice(0, 12);
     const color = makeGenreColor(categories);
 
-    // join pontos
     const pts = pointsG.selectAll('circle.point')
       .data(rows, d => `${d.Name}|${d.Platform}|${d.Rank}`);
 
@@ -241,7 +234,6 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
       .text(d => `r = ${d3.format('.2f')(d.r)}`);
     label.exit().remove();
 
-    // legenda (toggle 1 género de cada vez)
     if (legendEl) {
       renderLegend(legendEl, categories, (g)=>color(g), (label) => {
         selectedGenre = (selectedGenre === label) ? null : label;
@@ -249,14 +241,12 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
       });
     }
 
-    // Z-order: pontos por cima, brush por baixo
     pointsG.raise();
     brushG.lower();
 
     applyDim();
   }
 
-  // Integra com density (se clicares Top/Rest, aplica dim aqui também)
   bus.on('DENSITY/SELECT/group', ({ group, n }) => {
     densityFilter = group ? { group, n } : null;
     applyDim();
