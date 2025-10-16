@@ -5,6 +5,8 @@ import { mountStackedBar } from './src/charts/stackedBar.js';
 import { mountFilterPanel } from './src/filters/filterPanel.js';
 import { mountDensitySales } from './src/charts/density.js';
 import { mountScatter } from './src/charts/scatter.js';
+import { mountMultiLine } from './src/charts/multiLine.js';
+import { mountAlluvial } from './src/charts/alluvial.js';
 
 const bus = createBus();
 
@@ -44,6 +46,21 @@ const bus = createBus();
     const scatterRoot = document.getElementById('scatterRoot');
     if (scatterRoot) {
     mountScatter(scatterRoot, document.getElementById('scatterLegend'), state, bus);}
+
+    const multiLineRoot = document.getElementById('multiLineRoot');
+    if (multiLineRoot) {
+    mountMultiLine(multiLineRoot, document.getElementById('lineMetricToggle'), state, bus);}
+
+    const alluvialRoot = document.getElementById('alluvialRoot');
+    if (alluvialRoot) {
+        mountAlluvial(
+            alluvialRoot,
+            document.getElementById('alluvialToggle'),
+            document.getElementById('alluvialLabel'),
+            document.getElementById('alluvialLegend'),
+            state,
+            bus);
+    }
 
     bus.on('STATE/CHANGE', syncToggles);
 })();

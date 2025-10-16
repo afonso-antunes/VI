@@ -33,6 +33,7 @@
 
   <main class="main">
     <section class="grid grid-2">
+
       <div class="card">
         <div class="chart-controls">
           <label class="switch">
@@ -58,23 +59,41 @@
 
     <!-- ROW 2 -->
     <section class="grid grid-2">
+
       <div class="card">
         <div id="scatterRoot" class="chart-root"></div>
         <div id="scatterLegend" class="legend-root"></div>
       </div>
-      <div class="card placeholder">
-        <h3>Alluvial(Q4/Q5)</h3>
-        <p>Placeholder</p>
+
+      <div class="card">
+        <div class="chart-controls">
+          <label class="switch">
+            <input id="lineMetricToggle" type="checkbox" />
+              <span class="slider"></span>
+              <span class="label">Right Y: <b id="lineMetricLabel">Avg Critic Score</b></span>
+          </label>
+          </label>
+        </div>
+        <div id="multiLineRoot" class="chart-root"></div>
+        <div id="multiLineLegend" class="legend-root"></div>
       </div>
     </section>
 
     <!-- ROW 3 -->
-    <section class="grid grid-2">
-      <div class="card placeholder">
-        <h3>Multi-Series Line (Q6)</h3>
-        <p>Placeholder</p>
+   <section class="grid">
+      <div class="card">
+        <div class="chart-controls">
+          <label class="switch">
+            <input id="alluvialToggle" type="checkbox" checked />
+            <span class="slider"></span>
+            <span class="label">Right: <b id="alluvialLabel">Genres</b></span>
+          </label>
+        </div>
+        <div id="alluvialRoot" class="chart-root"></div>
+        <div id="alluvialLegend" class="legend-root"></div>
       </div>
     </section>
+
   </main>
 
   <script type="module" src="./main.js"></script>

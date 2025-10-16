@@ -1,3 +1,5 @@
+import { renderLegend } from '../core/legend.js';
+
 export function mountScatter(rootEl, legendEl, state, bus) {
   const margin = { top: 24, right: 16, bottom: 56, left: 64 };
   const width  = rootEl.clientWidth;
@@ -251,6 +253,11 @@ const underlay  = g.append('g').attr('class', 'underlay').attr('clip-path', `url
     densityFilter = group ? { group, n } : null;
     applyDim();
   });
+  bus.on('STACKED/SELECT/genre', (msg) => {
+  const genre = (typeof msg === 'string' || msg == null) ? msg : (msg.genre ?? null);
+  selectedGenre = genre || null;
+  applyDim();
+});
 
   bus.on('STATE/CHANGE', update);
   update();

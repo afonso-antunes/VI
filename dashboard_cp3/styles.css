@@ -124,3 +124,8 @@ svg text { fill: #c7d0dc; font-size: 11px; }
 .segment:hover { filter: brightness(1.05); }
 .segment.hover-dim { opacity: .45; }
 .segment.dimmed    { opacity: .25; } 
+.grid-2 > .span-2 { grid-column: 1 / -1; }
+.alluvial .flow        { opacity: .9; transition: opacity .15s ease; }
+.alluvial .node-label  { opacity: .9; transition: opacity .15s ease; }
+.alluvial .dimmed      { opacity: .08; }
+.alluvial .dimmed-node { opacity: .25; }

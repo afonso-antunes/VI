@@ -245,6 +245,11 @@ export function mountDensitySales(rootEl, legendEl, state, bus) {
     }
   });
 
+  bus.on('LINE/SELECT/genre', ({ genre }) => {
+    applyGenreDim(genre);
+  });
+  
+
   bus.on('STATE/CHANGE', update);
   update();
 }

@@ -2,6 +2,7 @@ import { applyFilters, initialFilters, filtersHash } from './state_filters.js';
 import { aggregateForStacked } from './state_agg.js';
 
 export function createState(pre, bus) {
+
   const st = {
     mode: 'region',      
     normalize: false,
@@ -49,6 +50,49 @@ export function createState(pre, bus) {
     st.data.view = applyFilters(pre.raw, st.filters);
     bus.emit('STATE/CHANGE', st);
   });
+  
+  // novo estado para a métrica do eixo direito
+  st.lineMetric = 'critic'; // 'critic' | 'user'
+
+  // listener para mudar a métrica
+  bus.on('LINE/METRIC/CHANGE', (m) => {
+    st.lineMetric = (m === 'user') ? 'user' : 'critic';
+    notify();
+  });
+
+  // agregador para o line chart
+  st.getLineSeries = () => {
+    // cache key por filtros + metric
+    const key = JSON.stringify({ type:'line', metric: st.lineMetric, fh: filtersHash(st.filters) });
+    if (st.cache.has(key)) return st.cache.get(key);
+
+    const rows = st.data.view;
+    // apenas décadas válidas (ignora "Multi-Decade" etc)
+    const byDec = new Map(); // dec -> { salesSum, criticSum, criticN, userSum, userN }
+    for (const d of rows) {
+      const dec = d.Decade;
+      if (!Number.isFinite(dec)) continue; // só décadas numéricas
+      if (!byDec.has(dec)) byDec.set(dec, { sales:0, critSum:0, critN:0, userSum:0, userN:0 });
+      const acc = byDec.get(dec);
+      acc.sales += (d.Global_Sales || 0);
+      if (Number.isFinite(d.Critic_Score)) { acc.critSum += d.Critic_Score; acc.critN += 1; }
+      if (Number.isFinite(d.User_Score))   { acc.userSum  += d.User_Score;   acc.userN  += 1; }
+    }
+
+    const decades = [...byDec.keys()].sort((a,b)=>a-b);
+    const salesSeries = decades.map(k => ({ k, v: byDec.get(k).sales }));
+    const scoreSeries = decades.map(k => {
+      const acc = byDec.get(k);
+      const v = st.lineMetric === 'critic'
+        ? (acc.critN ? acc.critSum/acc.critN : NaN)
+        : (acc.userN ? acc.userSum/acc.userN : NaN);
+      return { k, v };
+    });
+
+    const res = { decades, salesSeries, scoreSeries };
+    st.cache.set(key, res);
+    return res;
+  };
 
   bus.on('FILTERS/APPLY', () => { recalcView(); notify(); });
   bus.on('FILTERS/CLEAR', () => {

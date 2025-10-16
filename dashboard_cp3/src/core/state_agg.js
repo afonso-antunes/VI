@@ -23,7 +23,7 @@ export function aggregateForStacked(rows, mode, normalize) {
     }
   }
 
-  const N = mode === 'publisher' ? 2 : 4;
+  const N = mode === 'publisher' ? 1: 4;
   const seriesSet = new Set();
   const data = [];
 
@@ -38,7 +38,7 @@ export function aggregateForStacked(rows, mode, normalize) {
       if (i < N && v > 0) { kept.push([k, v]); seriesSet.add(k); }
       else other += v;
     });
-    //if (other > 0) { kept.push(['Other', other]); seriesSet.add('Other'); }
+    if (other > 0) { kept.push(['Other', other]); seriesSet.add('Other'); }
     const total = kept.reduce((s, x) => s + x[1], 0);
     const row = { Genre: g };
     kept.forEach(([k, v]) => {
